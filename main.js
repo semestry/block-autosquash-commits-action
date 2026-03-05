@@ -1,6 +1,5 @@
 import * as core from "@actions/core";
-
-const PullRequestChecker = require("./pullRequestChecker");
+import PullRequestChecker from "./pullRequestChecker.js";
 
 async function run() {
     try {
