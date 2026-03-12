@@ -31,4 +31,4 @@ class PullRequestChecker {
     }
 }
 
-module.exports = PullRequestChecker;
+export default PullRequestChecker;
