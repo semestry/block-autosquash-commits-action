@@ -13,7 +13,7 @@
     "@actions/github": "^9.1.1"
   },
   "devDependencies": {
-    "eslint": "^10.3.0",
+    "eslint": "^10.4.1",
     "@vercel/ncc": "^0.38.4",
     "globals": "^17.6.0",
     "@eslint/js": "^10.0.1"
