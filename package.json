@@ -6,6 +6,7 @@
     "eslint": "eslint . --ext .js",
     "eslint:fix": "eslint . --fix --ext .js",
     "test": "npm run eslint",
+    "build": "ncc build main.js",
     "postinstall": "ncc build main.js"
   },
   "license": "MIT",
