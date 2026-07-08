@@ -1,25 +1,29 @@
-import * as github from "@actions/github";
-import * as core from "@actions/core";
+import { context, getOctokit } from "@actions/github";
+import { debug, error } from "@actions/core";
 
 class PullRequestChecker {
     constructor(repoToken) {
-        this.client = github.getOctokit(repoToken);
+        this.client = getOctokit(repoToken);
     }
 
     async process() {
-        const commits = await this.client.rest.pulls.listCommits({
-            ...github.context.repo,
-            pull_number: github.context.issue.number,
-        });
+        const commits = await this.client.paginate(
+            "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
+            {
+                ...context.repo,
+                pull_number: context.issue.number,
+                per_page: 100,
+            },
+        );
 
-        core.debug(`${commits.data.length} commit(s) in the pull request`);
+        debug(`${commits.length} commit(s) in the pull request`);
 
         let blockedCommits = 0;
-        for (const commit of commits.data) {
-            const isAutosquash = commit.commit.message.startsWith("fixup!") || commit.commit.message.startsWith("squash!");
+        for (const { commit: { message }, sha, url } of commits) {
+            const isAutosquash = message.startsWith("fixup!") || message.startsWith("squash!");
 
             if (isAutosquash) {
-                core.error(`Commit ${commit.sha} is an autosquash commit: ${commit.url}`);
+                error(`Commit ${sha} is an autosquash commit: ${url}`);
 
                 blockedCommits++;
             }
